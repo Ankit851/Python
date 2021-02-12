@@ -10,7 +10,7 @@ print()
 mydata = cgi.FieldStorage()
 command = mydata.getvalue("x")
 
-ioutput = subprocess.getoutput("sudo " + command)
+output = subprocess.getoutput("sudo " + command)
 
 print(output)
 
