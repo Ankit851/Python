@@ -1,0 +1,40 @@
+import cv2
+cap  = cv2.VideoCapture(0)
+myphoto = "ankit.jpg"
+ret  ,  photo = cap.read()
+cv2.imwrite( myphoto , photo)
+cap.release()
+
+# upload photo into cloud storage :  S3
+region = "ap-south-1"
+bucket = "aiyuankit"
+
+
+import boto3
+
+
+
+upimage = "ankit.jpg"
+
+s3 = boto3.resource('s3')
+
+s3.Bucket(bucket).upload_file(myphoto , upimage)
+
+# connnect rek : ask for part method
+rek = boto3.client('rekognition' , region )
+
+response = rek.detect_labels(
+
+ Image={
+          'S3Object': {
+              'Bucket': bucket,
+              'Name': upimage,
+          }
+      },
+      MaxLabels=10,
+      MinConfidence=60
+    
+)
+
+for i in range(5):
+    print ( response['Labels'][i]['Name'] )
